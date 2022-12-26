@@ -321,9 +321,7 @@ function AdminPanel() {
     <span className="visually-hidden">Loading...</span>
   </div>
 </div>:null} */}
-<div className="spinner-border"  role="status">
-  <span className="visually-hidden">Loading...</span>
-</div>
+
   <div>  
     <div className="AddPostContainer" >
       <h1 >Create A Post</h1>
