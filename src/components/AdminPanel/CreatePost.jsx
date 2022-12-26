@@ -6,6 +6,8 @@ import { db, storage } from "../../firebase-config";
 import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { v4 } from "uuid";
 import "./CreatePost.css"
+import ProgressBar from 'react-bootstrap/ProgressBar'; 
+
 function AdminPanel() {
 
   const [title, setTitle] = useState("")
@@ -13,6 +15,9 @@ function AdminPanel() {
   const [imageUpload, setImageUpload] = useState("")
   const [text,setText] = useState('')
   const [username,setUsername] = useState('')
+  const [facultyName,SetfacultyName] = useState('')
+  const [day,setday] = useState('')
+  const [Progress,setProgress] = useState(10)
 
 
   const [PresentCo, setPresentCo] = useState([]);
@@ -23,6 +28,7 @@ function AdminPanel() {
   const PresentCoCollectionRef = collection(db, "TeamList")
   const PastCoCollectionRef = collection(db,"PastCoordinatorList")
   const MemberCollectionRef = collection(db,"MemberList")
+  const FacultyCollectionRef = collection(db,"FacultyList")
 
 
 
@@ -59,6 +65,9 @@ function AdminPanel() {
     setMembers(data);
   };
 
+
+  
+
   useEffect(() => {
     getMembers();
   }, []);
@@ -78,6 +87,7 @@ function AdminPanel() {
 
 
   const createPost = async () => {
+    
 
      if(title.length === 0|| details.length === 0|| imageUpload === 0 || text.length ===0)
        { alert("Empty field not allowed!!")
@@ -94,8 +104,8 @@ function AdminPanel() {
     uploadTask.on('state_changed',
       (snapshot) => {
 
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
+        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+        console.log('Upload is ' + Progress + '% done');
         switch (snapshot.state) {
           case 'paused':
             console.log('Upload is paused');
@@ -113,10 +123,13 @@ function AdminPanel() {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log('File available at', downloadURL);
 
-          addDoc(activitiesCollectionRef, { title, details, postId: postId,text, link: downloadURL,username })
+          addDoc(activitiesCollectionRef, { title, details, postId: postId,text,day, link: downloadURL,username })
           setTitle("")
           setDetails("")
           setImageUpload("")
+          setText('')
+          setday('')
+          setUsername('')
           document.getElementById("post_link").removeAttribute('disabled');
           //   console.log(imageLink)
 
@@ -163,9 +176,58 @@ function AdminPanel() {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log('File available at', downloadURL);
 
-          addDoc(PresentCoCollectionRef, { title, postId: postId, link: downloadURL })
+          addDoc(PresentCoCollectionRef, { title, postId: postId,link: downloadURL })
           setTitle("")
           setDetails("")
+          setImageUpload("")
+          getCoordinator();
+          document.getElementById("ADD_COORDINATOR").removeAttribute('disabled');
+          //   console.log(imageLink)
+
+        });
+      }
+
+
+    );
+  }
+
+  const AddFaculty = async () => {
+    if(facultyName.length === 0 || imageUpload.length === 0){
+      alert("Empty field not allowed!!")
+          return 
+    }
+    document.getElementById("ADD_COORDINATOR").setAttribute('disabled', 'true');
+    let postId = v4();
+
+    if (imageUpload == null) return;
+    const imageRef = ref(storage, `/${postId}`)
+
+    var uploadTask = uploadBytesResumable(imageRef, imageUpload);
+
+    uploadTask.on('state_changed',
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log('File available at', downloadURL);
+
+          addDoc(FacultyCollectionRef, { facultyName, link: downloadURL })
+          SetfacultyName('')
           setImageUpload("")
           getCoordinator();
           document.getElementById("ADD_COORDINATOR").removeAttribute('disabled');
@@ -254,8 +316,15 @@ function AdminPanel() {
 
 
    
-
-    
+{/* {Progress ?<div className="d-flex justify-content-center">
+  <div className="spinner-border" role="status">
+    <span className="visually-hidden">Loading...</span>
+  </div>
+</div>:null} */}
+<div className="spinner-border"  role="status">
+  <span className="visually-hidden">Loading...</span>
+</div>
+  <div>  
     <div className="AddPostContainer" >
       <h1 >Create A Post</h1>
       <div className="inContainer">
@@ -277,6 +346,9 @@ function AdminPanel() {
         <br />
         <textarea type="text" placeholder="Details" value={details} onChange={(event) => setDetails(event.target.value)} />
      <br/>
+     
+     <input type="date" value={day} onChange={(event) => setday(event.target.value)}/>
+   
       </div>
       <div className="imageInput">
         <label>Upload Image</label>
@@ -285,11 +357,14 @@ function AdminPanel() {
         <br />
         <br />
       </div>
+
       <br /><br /><br />
-      <button id="post_link" onClick={createPost}>Post</button>
+      <button className="btn btn-primary" id="post_link" onClick={createPost}>
+      <div className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></div>Post
+      </button>
     </div>
     
-
+      
 
     <div className="AddPostContainer" >
       <h1 >Delete Activities</h1>
@@ -319,6 +394,28 @@ function AdminPanel() {
       </div>
 
 </div>
+
+
+<div id = "AddPostContainer" className="AddPostContainer" >
+      <h1 >ADD FACULTY</h1>
+      <div className="inContainer">
+        <label>Name</label><br />
+        <input type="text" placeholder="Name" value={facultyName} onChange={(event) => SetfacultyName(event.target.value)} />
+      </div>
+     
+      <div className="imageInput">
+        <label>Upload Image</label>
+        <br />
+        <input style={{ marginLeft: "15%" }} type="file" accept="image/*" onChange={(event) => setImageUpload(event.target.files[0])} />
+        <br />
+        <br />
+      </div>
+      <br /><br /><br />
+      <button id="ADD_COORDINATOR" onClick={AddFaculty}>Post</button>
+    </div>
+ 
+
+
 
     <div id = "AddPostContainer" className="AddPostContainer" >
       <h1 >ADD CO-ORDINATOR</h1>
@@ -409,6 +506,7 @@ function AdminPanel() {
 
       </div>
    
+  </div>
   </div>
 </div>
 }
