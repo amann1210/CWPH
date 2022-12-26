@@ -21,6 +21,8 @@ function Activities() {
 
     let data = await getDocs(activitiesCollectionRef);
     data = (data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    data.sort((a, b) => b.day - a.day);
+
     console.log(data);
     setActivities(data);
   };
@@ -98,11 +100,13 @@ function Activities() {
                           
                         </div><br />
                            </div>: <div className="row" >
-                           <div className="col-4 "><p><b>CWPH.LNMIIT</b></p>
-                          <p><b>{event.username}</b></p></div>
+                           <div className="col-4 ">< h6><b>CWPH.LNMIIT</b></h6>
+                          <h6 ><b>{event.username}</b></h6>
+                          <p><b>{event.day}</b></p>
+                          </div>
                           <div className="col-8">
                           
-                          <p style={{ textAlign: "justify" }} className="px-3">
+                          <p style={{ textAlign: "justify" }} className="px-3 text-dark">
                             {event.text}
                           </p>
                           <button className="col align-self-end offset-3 bg-white border border-white text-primary" onClick={() => {
