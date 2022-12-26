@@ -3,15 +3,11 @@ import "./Discussion.css"
 // import { addDoc, collection, doc } from "firebase/firestore";
 import { db, auth } from "../../firebase-config";
 import { addDoc, collection, deleteDoc, doc, updateDoc, arrayUnion, arrayRemove, query, where } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+
 import { getDocs } from "firebase/firestore";
 import { async } from '@firebase/util';
 import { isDOMComponent } from 'react-dom/test-utils';
 import Comments from "./comments"
-import { Redirect } from "react-router-dom";
-// import "../node_modules/bootstrap/scss/functions";
-// import "../node_modules/bootstrap/scss/variables";
-// import { get } from 'https';
 
 
 let Discussion = () => {
@@ -68,11 +64,7 @@ let Discussion = () => {
 
     // let createdAt = new Date(comment.createdAt).toLocaleDateString();
     const postcomment = async () => {
-  
-if(comment.length === 0){
-    alert("Not Possible to do that!!Empty Comment not allowed")
-    return
-}
+ 
 
         await addDoc(commentCollectionRef,
             {
@@ -87,11 +79,17 @@ if(comment.length === 0){
     };
 
     let handleOnChange = (e) => {
-        if (!e.target.value) {
-            console.log('empty')
-        }
-        else
-            setComment(e.target.value);
+        console.log(e.target.value)
+         if (!e.target.value) {
+           setComment(e.target.value);
+           document.getElementById("comment-button").setAttribute('disabled', 'true');
+
+         }
+         else{
+             setComment(e.target.value);
+             document.getElementById("comment-button").removeAttribute('disabled');
+         }
+
     }
 
     let postReplyHandler = async (pid) => {
@@ -431,8 +429,8 @@ if(comment.length === 0){
 
         <div>
 
-            <textarea className='text-area-container' value={comment} onChange={handleOnChange} placeholder='Place your comments here!'/>
-            <button className='comment-buttonn' onClick={postcomment}> 	
+            <textarea  className='text-area-container' value={comment} onChange={handleOnChange} placeholder='Place your comments here!'/>
+            <button disabled id ='comment-button' className='comment-buttonn' onClick={postcomment}> 	
 &#10148;</button>       
         </div>
         <br /><br /><br />
