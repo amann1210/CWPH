@@ -3,11 +3,15 @@ import "./Discussion.css"
 // import { addDoc, collection, doc } from "firebase/firestore";
 import { db, auth } from "../../firebase-config";
 import { addDoc, collection, deleteDoc, doc, updateDoc, arrayUnion, arrayRemove, query, where } from "firebase/firestore";
-
+import { useNavigate } from "react-router-dom";
 import { getDocs } from "firebase/firestore";
 import { async } from '@firebase/util';
 import { isDOMComponent } from 'react-dom/test-utils';
 import Comments from "./comments"
+import { Redirect } from "react-router-dom";
+// import "../node_modules/bootstrap/scss/functions";
+// import "../node_modules/bootstrap/scss/variables";
+// import { get } from 'https';
 
 
 let Discussion = () => {
@@ -64,7 +68,11 @@ let Discussion = () => {
 
     // let createdAt = new Date(comment.createdAt).toLocaleDateString();
     const postcomment = async () => {
- 
+  
+if(comment.length === 0){
+    document.getElementById("comment-button").setAttribute('disabled', 'true');
+    return
+}
 
         await addDoc(commentCollectionRef,
             {
@@ -430,7 +438,7 @@ let Discussion = () => {
         <div>
 
             <textarea  className='text-area-container' value={comment} onChange={handleOnChange} placeholder='Place your comments here!'/>
-            <button disabled id ='comment-button' className='comment-buttonn' onClick={postcomment}> 	
+            <button id ='comment-button' className='comment-buttonn' onClick={postcomment}> 	
 &#10148;</button>       
         </div>
         <br /><br /><br />
