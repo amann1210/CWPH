@@ -38,11 +38,12 @@ const HomePage = () => {
                 <div className="section-heading-content">
                   <h2><b>What is CWPH</b> </h2>
                   <p>
-                    The centre for Wellness and Positive Health aims to inculcate
-                    good habits as well as infuse positive and powerful thoughts
-                    among our students and others so that they could develop a
-                    healthy body and a sound mind necessary for a complete all round
-                    holistic and moral development of their personality
+                  The center for Wellness and Positive Health aims to 
+                  instill good habits as well as strong, empowering 
+                  beliefs in our students and other individuals.It 
+                  helps them to develop a healthy body and a sound mind
+                  which is essential for their personality&apos;s
+                  complete, holistic, and moral development.
                   </p>
                 </div>
                 <div className="section-heading-image">
