@@ -41,7 +41,7 @@ let Discussion = () => {
         data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         console.log(data);
         setDiscussions(data);
-    };
+    }
 
 
     const getReplies = async (commentId) => {
