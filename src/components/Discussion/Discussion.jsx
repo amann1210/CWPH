@@ -195,7 +195,7 @@ if(comment.length === 0){
 
 
                         {
-                            auth.currentUser.email === "20ucs109@lnmiit.ac.in" ? <button className="border-0 bg-transparent " onClick={() => { DeletePost(discussion.id) }}>🗑️</button> : null
+                            auth.currentUser.email === "20ucs109@lnmiit.ac.in" ? <button className="border-0 bg-transparent " onClick={() => { DeletePost(discussion.id) }}>🗑</button> : null
 
                         }
 
@@ -301,7 +301,7 @@ if(comment.length === 0){
                                                         <div className='time-reply'>{reply.createdAt}</div></div>
                                                     <div className='comment-reply-container'>{reply.reply} </div>
                                                     {
-                            auth.currentUser.email === "20ucs109@lnmiit.ac.in" ? <button className="border-0 bg-transparent " onClick={() => { DeleteReply(reply.id) }}>🗑️</button> : null
+                            auth.currentUser.email === "20ucs109@lnmiit.ac.in" ? <button className="border-0 bg-transparent " onClick={() => { DeleteReply(reply.id) }}>🗑</button> : null
 
                         }
                                                 </div>
@@ -462,4 +462,4 @@ if(comment.length === 0){
     </div>
 }
 
-export default Discussion
+export default Discussion
